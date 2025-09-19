@@ -1,0 +1,62 @@
+---
+
+---
+
+<nav class="navbar">
+  <div class="logo">
+    <img src="/logo.svg" alt="Logo" width="40" height="40" />
+  </div>
+  <ul class="nav-links">
+    <li>
+      <a href="/">
+      Home
+      </a>
+    </li>
+    <li>
+      <a href="/projects">
+      Projects
+      </a>
+    </li>
+    <li>
+      <a href="/wip">
+      WIP
+      </a>
+    </li>
+    <li>
+      <a href="/about">
+      About me
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<style>
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #18181b;
+}
+.logo img {
+  display: block;
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin-left: 2rem;
+  padding: 0;
+}
+.nav-links li a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-links li a:hover {
+  color: #38bdf8;
+}
+</style>
