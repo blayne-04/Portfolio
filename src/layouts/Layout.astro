@@ -1,6 +1,6 @@
 ---
 import '../styles/tailwind.css';
-import alpineScript from '../scripts/alpine.js?url';
+import alpineScript from 'alpinejs/dist/cdn.min.js?url';
 ---
 <!doctype html>
 <html lang="en">
@@ -15,7 +15,7 @@ import alpineScript from '../scripts/alpine.js?url';
 		<div class="page-shell">
 			<slot />
 		</div>
-		<script type="module" src={alpineScript}></script>
+		<script defer src={alpineScript}></script>
 	</body>
 </html>
 
