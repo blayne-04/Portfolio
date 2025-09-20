@@ -1,0 +1,76 @@
+---
+import bannerImage from '../assets/banner.png';
+---
+
+<section
+  x-data="{
+    scrollY: 0,
+    wheelOffset: 0,
+    maxShift: 0,
+    displayHeight: null,
+    clamp(value) {
+      return Math.max(0, Math.min(this.maxShift, value));
+    },
+    updateFromScroll() {
+      this.scrollY = window.scrollY;
+    },
+    updateFromWheel(event) {
+      this.wheelOffset = this.clamp(this.wheelOffset + event.deltaY * 0.7);
+    },
+    computeShift() {
+      const container = this.$refs.container;
+      const img = this.$refs.image;
+      if (!container || !img) return;
+      const { naturalWidth, naturalHeight } = img;
+      if (!naturalWidth || !naturalHeight) return;
+      const scale = Math.max(
+        container.offsetWidth / naturalWidth,
+        container.offsetHeight / naturalHeight
+      );
+      const displayHeight = naturalHeight * scale;
+      this.displayHeight = displayHeight;
+      this.maxShift = Math.max(0, displayHeight - container.offsetHeight);
+      this.wheelOffset = this.clamp(this.wheelOffset);
+    },
+    parallaxStyle() {
+      const base = this.clamp(this.scrollY * 0.3);
+      const combined = this.clamp(base + this.wheelOffset);
+      return {
+        transform: `translateY(-${combined}px)`,
+        height: this.displayHeight ? `${this.displayHeight}px` : undefined,
+      };
+    },
+  }"
+  x-init="updateFromScroll(); computeShift()"
+  @scroll.window="updateFromScroll()"
+  @wheel.prevent="updateFromWheel($event)"
+  @resize.window="computeShift()"
+  class="relative left-1/2 right-1/2 mt-[var(--navbar-height)] w-screen -translate-x-1/2 transform"
+>
+  <div class="relative w-full">
+    <div
+      x-ref="container"
+      class="relative flex min-h-[calc(100vh-var(--navbar-height))] w-full overflow-hidden border-y border-white/10 bg-gray-900/40 shadow-2xl"
+    >
+      <div class="absolute inset-0 overflow-hidden">
+        <img
+          x-ref="image"
+          src={bannerImage.src}
+          width={bannerImage.width}
+          height={bannerImage.height}
+          alt="Mountain skyline"
+          class="absolute inset-x-0 top-0 w-full object-cover object-top transition-transform duration-150 ease-out will-change-transform"
+          x-bind:style="parallaxStyle()"
+          @load="computeShift()"
+        />
+        <div class="absolute inset-0 bg-black/70"></div>
+      </div>
+      <div class="relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-16 text-center text-white md:py-24">
+        <h1 class="text-4xl font-semibold tracking-wide sm:text-5xl">Banner</h1>
+        <p class="mt-6 max-w-2xl text-lg text-slate-200 sm:text-xl">
+          Blayne Fuller, Electrical &bull; Building responsive systems and immersive interfaces.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
