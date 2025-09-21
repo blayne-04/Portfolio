@@ -2,6 +2,7 @@
 import portraitImage from '../../public/portfolio_photo.png';
 import ast2Pdf from '../assets/AST_2GHC.pdf?url';
 import resumePdf from '../assets/Resume.pdf?url';
+import SkillTree from './SkillTree.astro';
 
 const toolItems = [
   {
@@ -143,6 +144,19 @@ const certificationItems = [
         </div>
 
       </section>
+
+      <section class="card skill-tree-card">
+        <h2 class="card-title">
+          <span class="card-title-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><path d="M6 9v3m12-6v3m-6 6l-4.5 3M12 15l4.5 3"/></g></svg>
+          </span>
+          <span>Skill Tree</span>
+        </h2>
+        <div class="skill-tree-card__body">
+          <SkillTree />
+        </div>
+      </section>
+
       <dialog class="cert-modal" id="certModal" aria-labelledby="certModalTitle">
         <div class="cert-modal__content">
           <header class="cert-modal__header">
@@ -161,6 +175,7 @@ const certificationItems = [
       </dialog>
     </aside>
   </section>
+
 </div>
 
 <style>
@@ -192,6 +207,26 @@ const certificationItems = [
     width: 85%;
     max-width: 1400px;
     margin: 0 auto;
+  }
+
+  .skill-tree-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .skill-tree-card__body {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .skill-tree-card :global(.skill-tree) {
+    width: 100%;
+  }
+
+  .skill-tree-card :global(.skill-tree__canvas) {
+    height: 100%;
   }
 
   .overview {
@@ -653,6 +688,14 @@ const certificationItems = [
       max-width: 100%;
     }
 
+    .skill-tree-card {
+      gap: 1.15rem;
+    }
+
+    .skill-tree-card__body {
+      border-radius: 14px;
+    }
+
     .icon-grid--six {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -749,6 +792,3 @@ const certificationItems = [
     resetModal();
   });
 </script>
-
-
-
