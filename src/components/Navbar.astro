@@ -1,5 +1,5 @@
 ---
-
+import resumePdf from '../assets/Resume.pdf?url';
 ---
 
 <nav class="navbar">
@@ -11,7 +11,6 @@
       <a href="/">
         <span class="nav-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 20 20">
-            <!-- Icon from HeroIcons v1 Solid by Refactoring UI Inc - https://github.com/tailwindlabs/heroicons/blob/master/LICENSE -->
             <path fill="currentColor" d="M10.707 2.293a1 1 0 0 0-1.414 0l-7 7a1 1 0 0 0 1.414 1.414L4 10.414V17a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-6.586l.293.293a1 1 0 0 0 1.414-1.414z" />
           </svg>
         </span>
@@ -22,7 +21,6 @@
       <a href="/projects">
         <span class="nav-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512">
-            <!-- Icon from Font Awesome Solid by Dave Gandy - https://creativecommons.org/licenses/by/4.0/ -->
             <path fill="currentColor" d="M0 80c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v16h128V80c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48h-96c-26.5 0-48-21.5-48-48v-16H192v16c0 7.3-1.7 14.3-4.6 20.5L256 288h80c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48h-96c-26.5 0-48-21.5-48-48v-96c0-7.3 1.7-14.3 4.6-20.5L128 224H48c-26.5 0-48-21.5-48-48z" />
           </svg>
         </span>
@@ -33,7 +31,6 @@
       <a href="/about">
         <span class="nav-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 20 20">
-            <!-- Icon from HeroIcons v1 Solid by Refactoring UI Inc - https://github.com/tailwindlabs/heroicons/blob/master/LICENSE -->
             <path fill="currentColor" fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0a8 8 0 0 1 16 0m-6-3a2 2 0 1 1-4 0a2 2 0 0 1 4 0m-2 4a5 5 0 0 0-4.546 2.916A5.99 5.99 0 0 0 10 16a5.99 5.99 0 0 0 4.546-2.084A5 5 0 0 0 10 11" clip-rule="evenodd" />
           </svg>
         </span>
@@ -41,10 +38,9 @@
       </a>
     </li>
   </ul>
-  <a class="resume-link" href="/resume.pdf" download>
+  <a class="resume-link" href={resumePdf} download>
     <span class="nav-icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 20 20">
-        <!-- Icon from HeroIcons v1 Solid by Refactoring UI Inc - https://github.com/tailwindlabs/heroicons/blob/master/LICENSE -->
         <path fill="currentColor" fill-rule="evenodd" d="M6 2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.414A2 2 0 0 0 15.414 6L12 2.586A2 2 0 0 0 10.586 2zm5 6a1 1 0 1 0-2 0v3.586l-1.293-1.293a1 1 0 1 0-1.414 1.414l3 3a1 1 0 0 0 1.414 0l3-3a1 1 0 0 0-1.414-1.414L11 11.586z" clip-rule="evenodd" />
       </svg>
     </span>
