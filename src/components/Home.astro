@@ -1,76 +1,433 @@
 ---
-import bannerImage from '../../public/banner.png';
----
+import portraitImage from '../../public/portfolio_photo.png';
 
-<section
-  x-data="{
-    scrollY: 0,
-    wheelOffset: 0,
-    maxShift: 0,
-    displayHeight: null,
-    clamp(value) {
-      return Math.max(0, Math.min(this.maxShift, value));
-    },
-    updateFromScroll() {
-      this.scrollY = window.scrollY;
-    },
-    updateFromWheel(event) {
-      this.wheelOffset = this.clamp(this.wheelOffset + event.deltaY * 0.7);
-    },
-    computeShift() {
-      const container = this.$refs.container;
-      const img = this.$refs.image;
-      if (!container || !img) return;
-      const { naturalWidth, naturalHeight } = img;
-      if (!naturalWidth || !naturalHeight) return;
-      const scale = Math.max(
-        container.offsetWidth / naturalWidth,
-        container.offsetHeight / naturalHeight
-      );
-      const displayHeight = naturalHeight * scale;
-      this.displayHeight = displayHeight;
-      this.maxShift = Math.max(0, displayHeight - container.offsetHeight);
-      this.wheelOffset = this.clamp(this.wheelOffset);
-    },
-    parallaxStyle() {
-      const base = this.clamp(this.scrollY * 0.3);
-      const combined = this.clamp(base + this.wheelOffset);
-      return {
-        transform: `translateY(-${combined}px)`,
-        height: this.displayHeight ? `${this.displayHeight}px` : undefined,
-      };
-    },
-  }"
-  x-init="updateFromScroll(); computeShift()"
-  @scroll.window="updateFromScroll()"
-  @wheel.prevent="updateFromWheel($event)"
-  @resize.window="computeShift()"
-  class="relative left-1/2 right-1/2 mt-[var(--navbar-height)] w-screen -translate-x-1/2 transform"
->
-  <div class="relative w-full">
-    <div
-      x-ref="container"
-      class="relative flex min-h-[calc(100vh-var(--navbar-height))] w-full overflow-hidden border-y border-white/10 bg-gray-900/40 shadow-2xl"
-    >
-      <div class="absolute inset-0 overflow-hidden">
-        <img
-          x-ref="image"
-          src={bannerImage.src}
-          width={bannerImage.width}
-          height={bannerImage.height}
-          alt="Mountain skyline"
-          class="absolute inset-x-0 top-0 w-full object-cover object-top transition-transform duration-150 ease-out will-change-transform"
-          x-bind:style="parallaxStyle()"
-          @load="computeShift()"
-        />
-        <div class="absolute inset-0 bg-black/70"></div>
-      </div>
-      <div class="relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-16 text-center text-white md:py-24">
-        <h1 class="text-4xl font-semibold tracking-wide sm:text-5xl">Banner</h1>
-        <p class="mt-6 max-w-2xl text-lg text-slate-200 sm:text-xl">
-          Blayne Fuller, Electrical &bull; Building responsive systems and immersive interfaces.
-        </p>
+const toolItems = [
+  {
+    name: 'Python',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none"><path stroke="#888888" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 7.5H7.5m4.5 9h4.5m0 0h1.521c.807 0 1.634-.188 2.13-.824c.531-.679 1.099-1.835 1.099-3.676c0-1.84-.568-2.997-1.098-3.676c-.497-.636-1.324-.824-2.13-.824H16.5m0 9v1.521c0 .807-.188 1.634-.824 2.13c-.679.531-1.835 1.099-3.676 1.099c-1.84 0-2.997-.568-3.676-1.098c-.636-.497-.824-1.324-.824-2.13V16.5m0-9H5.978c-.807 0-1.633.188-2.13.824c-.53.679-1.098 1.835-1.098 3.676c0 1.84.568 2.997 1.098 3.676c.497.636 1.323.824 2.13.824H7.5m0-9V5.978c0-.807.188-1.633.824-2.13c.679-.53 1.835-1.098 3.676-1.098c1.84 0 2.997.568 3.676 1.098c.636.497.824 1.323.824 2.13V7.5m-9 9V14a2 2 0 0 1 2-2h5a2 2 0 0 0 2-2V7.5"/><path fill="#888888" d="M15 18.5a.75.75 0 1 1-1.5 0a.75.75 0 0 1 1.5 0m-6-13a.75.75 0 1 1 1.5 0a.75.75 0 0 1-1.5 0"/></g></svg>`
+  },
+  {
+    name: 'C / C++',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="#888888" stroke-width="1.5"><path d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12Z"/><path stroke-linecap="round" d="M15.5 9.172c-1.601-1.563-4.198-1.563-5.799 0a3.93 3.93 0 0 0 0 5.656c1.601 1.563 4.198 1.563 5.799 0"/></g></svg>`
+  },
+  {
+    name: 'MATLAB',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 128 128"><path fill="#888888" d="M123.965 91.902c-7.246-18.297-13.262-37.058-20.184-55.476c-3.054-7.84-6.047-15.746-10.215-23.082c-1.656-2.633-3.238-5.528-5.953-7.215a4 4 0 0 0-2.222-.606c-1.27.028-2.536.594-3.504 1.415c-3.645 2.886-5.805 7.082-8.227 10.949c-4.277 7.172-8.789 14.687-15.941 19.347c-3.36 2.371-7.762 2.63-11 5.172c-4.43 3.34-7.442 8.078-11.074 12.184c-.829.988-2.11 1.383-3.227 1.918C21.578 60.93 10.738 65.336 0 69.98c9.09 7.032 18.777 13.29 28.05 20.079c2.544-.504 5.098-1.547 7.72-1.082c4.16 1.3 6.597 5.285 8.503 8.93c3.875 7.94 6.676 16.323 9.813 24.57c5.246-.375 9.969-3.079 14.027-6.258c7.809-6.324 13.758-14.5 20.305-22.047c3.14-3.3 6.34-7.23 11.05-8.149c4.762-1.152 9.864.555 13.395 3.836c4.957 4.43 9.344 9.551 15.137 12.942c-.777-3.836-2.645-7.278-4.035-10.899M42.96 79.012c-4.57 2.703-9.426 4.93-14.176 7.289c-7.457-4.996-14.723-10.29-22.05-15.465c9.878-4.328 19.91-8.348 29.917-12.387c4.746 3.703 9.637 7.223 14.383 10.926c-2.23 3.563-4.914 6.871-8.074 9.637m10.168-12.414C48.414 63.058 43.64 59.609 39 55.977c2.977-4.055 6.238-7.977 10.14-11.172c2.587-1.657 5.743-2.117 8.426-3.61c6.368-3.18 10.711-9.011 14.86-14.582c-5.317 13.805-10.992 27.664-19.297 39.985zm0 0"/></svg>`
+  },
+  {
+    name: 'KiCad',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><path fill="#888888" d="M0 0v512h512V0zm407.66 42.014c34.56-19.924 77.994 5.116 77.994 44.965s-43.434 64.89-77.994 44.965s-34.56-70.006 0-89.93M223.27 455.097c4.285-18.443-3.36-28.73-18.185-51.957l-75.078-102.356v103.654q0 36.11 14.548 50.659h-122.1C35.16 440.897 37.36 432.755 37 404.698V118.673c-.005-28.4-1.314-35.496-14.545-50.399h122.1q-14.549 14.55-14.548 50.4v95.34l74.558-94.302c14.622-19.05 27.149-37.565 21.563-51.437H356.28c-24.488 16.204-37.15 35.07-58.192 60.79l-97.68 121.58l116.644 160.548c13.797 18.434 29.43 37.085 39.747 43.904zm153.274 0c8.769-10.373 12.402-16.005 11.95-45.723V216.093c.574-23.678-.854-32.672-11.69-45.203H478.9v238.484c.263 25.475.386 32.133 11.95 45.723z"/></svg>`
+  },
+  {
+    name: 'LTspice',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="#888888" d="M9.327 3.485c-.797.627-.975 1.621-1.165 3.317c-.365 3.257-.64 5.198-1.047 8.658c-.199 1.701.976 1.902 2.365 1.886h2.884c.26.002.352.123.319.38c-.124.966-.258 2.79-1.19 2.79L0 20.492s2.83-1.032 3.165-3.372l1.34-10.887c.208-1.357 1.288-2.75 2.634-2.75zm5.556 17.03c1.346 0 2.426-1.392 2.634-2.749l1.34-10.887c.335-2.34 3.165-3.372 3.165-3.372l-11.493-.022c-.932 0-1.066 1.823-1.19 2.788c-.033.258.059.379.32.38h2.883c1.39-.015 2.564.186 2.365 1.887c-.406 3.46-.682 5.4-1.047 8.658c-.19 1.696-.368 2.69-1.165 3.317zm8.319-13.862c.259 0 .496-.21.528-.466l.267-2.23a.41.41 0 0 0-.414-.472h-.88c-1.088 0-2.202 1.795-2.255 2.696a.408.408 0 0 0 .411.472z"/></svg>`
+  },
+  {
+    name: 'Verilog',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><path fill="#888888" d="M157.367 111.74c.887-.005 1.774-.008 2.687-.012a1855 1855 0 0 1 8.827-.003l6.364-.015c5.742-.013 11.484-.014 17.225-.012q7.202 0 14.404-.008 16.994-.016 33.989-.006c11.672.006 23.344-.006 35.016-.027q15.056-.026 30.113-.02c5.987.001 11.975-.001 17.963-.015q8.447-.018 16.895.002 3.09.004 6.183-.009c20.035-.074 20.035-.074 28.967 3.385l2.221.847c8.744 3.574 14.838 11.18 18.806 19.5 2.46 6.71 3.266 12.721 3.234 19.804l.011 2.69c.01 2.958.007 5.915.003 8.873l.015 6.383a6276 6276 0 0 1 .012 17.307q0 7.234.008 14.47.016 17.077.006 34.155c-.006 11.725.006 23.45.027 35.176q.026 15.124.02 30.248c-.001 6.015.001 12.03.015 18.044q.018 8.491-.002 16.983-.004 3.105.009 6.21c.107 28.893.107 28.893-9.385 40.31l-1.594 1.93c-7.351 8.08-17.043 11.4-27.744 12.257-2.353.073-4.699.09-7.053.08l-2.696.014c-2.951.013-5.902.011-8.854.01l-6.384.02c-5.76.017-11.52.022-17.281.024q-5.406.001-10.812.01-18.881.028-37.762.026c-11.71-.002-23.421.02-35.132.051q-15.111.038-30.222.036c-6.008 0-12.016.005-18.024.026q-8.48.029-16.959.005-3.1-.003-6.2.015c-14.32.078-28.274.02-39.283-10.504-8.768-8.695-13.178-18.293-13.272-30.713l.011-2.49-.011-2.706c-.01-2.976-.007-5.952-.003-8.928l-.015-6.423c-.014-5.804-.014-11.608-.012-17.411q0-7.276-.008-14.553-.016-17.171-.006-34.342c.006-11.796-.006-23.592-.027-35.388q-.026-15.21-.02-30.418c.001-6.05-.001-12.101-.015-18.152q-.018-8.538.002-17.076.004-3.126-.009-6.251c-.074-20.25-.074-20.25 3.385-29.149l.847-2.22c3.542-8.668 11.103-14.771 19.305-18.807 7.284-2.488 14.56-3.27 22.215-3.234M121 130l-1 4c4.731 3.36 9.911 4.533 15.437 6 16.111 4.293 16.111 4.293 21.732 12.828 3.748 6.494 6.659 13.366 9.643 20.234q1.112 2.524 2.226 5.047c1.945 4.411 3.877 8.828 5.806 13.246 1.859 4.252 3.728 8.5 5.597 12.747q3.915 8.895 7.813 17.798c4.297 9.81 8.621 19.609 12.958 29.402 16.003 36.13 31.706 72.333 46.1 109.14l.783 1.999q1.801 4.608 3.582 9.223l1.249 3.219 1.075 2.793c1.002 2.525 1.002 2.525 2.999 5.324 4.054.431 5.55.3 9-2a96 96 0 0 0 2.758-7.652l1.618-4.914.86-2.645c5.185-15.895 10.817-31.574 17.014-47.102l1.082-2.71A3305 3305 0 0 1 297 297l1.03-2.531a8195 8195 0 0 1 9.382-22.916 5485 5485 0 0 0 15.708-38.694q4.31-10.707 8.61-21.415a10619 10619 0 0 1 13.129-32.569q2.485-6.15 4.997-12.29 1.128-2.764 2.245-5.532c6.484-15.77 6.484-15.77 12.598-18.932 6.497-2.233 13.03-2.963 19.824-3.691 3.446-.31 3.446-.31 6.477-1.43l1-6c-6.4-3.2-15.586-2.137-22.586-2.094l-3.393.011c-13.541.063-27.08.301-40.62.547l-10.342.18q-10.03.175-20.059.356l1 5c.812.105 1.623.21 2.46.32 3.702.487 7.402.99 11.102 1.492l3.87.502c14.682 2.022 14.682 2.022 20.005 6.936 3.492 6.145.973 13.434-.562 19.937l-.682 2.928c-3.645 15.305-8.476 30.09-13.97 44.822-1.925 5.188-3.748 10.408-5.567 15.633a1358 1358 0 0 1-10.219 28.305l-.917 2.46c-8.973 23.974-18.79 47.62-28.545 71.283A865 865 0 0 0 270 337c-3.536-7.497-6.653-15.096-9.59-22.846-9.885-26.028-20.366-51.83-31.969-77.14-7.015-15.328-13.586-30.85-20.178-46.363a1685 1685 0 0 0-5.733-13.334l-1.236-2.85q-1.169-2.694-2.35-5.383C195.34 160.76 191.739 152.138 194 143c7.393-6.273 18.593-5.37 27.687-5.566 5.134-.155 9.507-.4 14.313-2.434l-1-5c-10.004-1.076-19.954-1.155-30-1.125l-2.63.003c-27.125.031-54.25.606-81.37 1.122"/></svg>`
+  }
+];
+
+const certificationItems = [
+  { label: 'FE', name: 'FE Electrical Exam Prep' },
+  { label: 'PCB', name: 'PCB Design Workshop Series' },
+  { label: 'PM', name: 'Project Management Foundations' }
+];
+---
+<div class="home-scale">
+  <section class="home">
+    <div class="overview">
+      <figure class="hero-image">
+        <img src={portraitImage.src} alt="Blayne F. Portrait" loading="lazy" />
+      </figure>
+
+      <article class="summary-card">
+        <header class="summary-header">
+          <p class="summary-overline">Blayne F.</p>
+          <h1 class="summary-title">Current Role</h1>
+          <p class="summary-text">Electrical Engineering Student @ WSU Pullman — Class of 2027</p>
+        </header>
+
+        <section class="summary-section">
+          <h2 class="summary-label">Focus</h2>
+          <p class="summary-text">Embedded systems, PCB design, integrated circuits, signal processing, electromagnetism</p>
+        </section>
+
+        <section class="summary-section">
+          <h2 class="summary-label">Emerging Interests</h2>
+          <p class="summary-text">MEMS, quantum computing, cryptography, bioelectronic systems</p>
+        </section>
+
+        <a class="resume-link" href="/resume.pdf">Resume Download</a>
+      </article>
+
+      <div class="context-grid">
+        <section class="context-card">
+          <h2 class="context-title">Purpose</h2>
+          <p class="context-text">This space documents what I am actively building, learning, and refining. It is a live map of where I am headed, how I am leveling up, and which tools I am sharpening along the way.</p>
+        </section>
+        <section class="context-card">
+          <h2 class="context-title">Currently</h2>
+          <ul class="context-list">
+            <li><span class="context-label">Building:</span> Wearable HRV monitor</li>
+            <li><span class="context-label">Studying:</span> Electromagnetism + Lectures on Trees</li>
+            <li><span class="context-label">Reading:</span> "Signals & Systems" by Oppenheim</li>
+            <li><span class="context-label">Short-term goal:</span> Finish 6 projects by Fall 2025</li>
+          </ul>
+        </section>
       </div>
     </div>
-  </div>
-</section>
+
+    <aside class="sidebar">
+      <section class="card tools">
+        <h2 class="card-title">
+          <span class="card-title-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M10.96 21q-.349 0-.605-.229q-.257-.229-.319-.571l-.263-2.092q-.479-.145-1.036-.454q-.556-.31-.947-.664l-1.915.824q-.317.14-.644.03t-.504-.415L3.648 15.57q-.177-.305-.104-.638t.348-.546l1.672-1.25q-.045-.272-.073-.559q-.03-.288-.03-.559q0-.252.03-.53q.028-.278.073-.626l-1.672-1.25q-.275-.213-.338-.555t.113-.648l1.06-1.8q.177-.287.504-.406t.644.021l1.896.804q.448-.373.97-.673q.52-.3 1.013-.464l.283-2.092q.061-.342.318-.571T10.96 3h2.08q.349 0 .605.229q.257.229.319.571l.263 2.112q.575.202 1.016.463t.909.654l1.992-.804q.318-.14.645-.021t.503.406l1.06 1.819q.177.306.104.638t-.348.547L18.36 10.92q.082.31.092.569t.01.51q0 .233-.02.491q-.019.259-.088.626l1.69 1.27q.275.213.358.546t-.094.638l-1.066 1.839q-.176.306-.513.415q-.337.11-.654-.03l-1.923-.824q-.467.393-.94.673t-.985.445l-.264 2.111q-.061.342-.318.571t-.605.23zm1.013-6.5q1.046 0 1.773-.727T14.473 12t-.727-1.773t-1.773-.727q-1.052 0-1.776.727T9.473 12t.724 1.773t1.776.727"/></svg>
+          </span>
+          <span>Tools</span>
+        </h2>
+        <div class="icon-grid icon-grid--six" role="list">
+          {toolItems.map((item) => (
+            <div class="icon" role="listitem" aria-label={item.name} title={item.name}>
+              <span class="sr-only">{item.name}</span>
+              <span class="icon-graphic" set:html={item.icon}></span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="card certifications">
+        <h2 class="card-title">
+          <span class="card-title-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M18 10a4 4 0 0 1 3 6.646v4.192a1.1 1.1 0 0 1-1.592.984L18 21.118l-1.408.704A1.1 1.1 0 0 1 15 20.838v-4.192A4 4 0 0 1 18 10m2-6a2 2 0 0 1 2 2v2a1 1 0 1 1-2 0V6H4v12h8a1 1 0 1 1 0 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm-1 13.874a4 4 0 0 1-2 0v1.508l.553-.276a1 1 0 0 1 .894 0l.553.276zM18 12a2 2 0 1 0 0 4a2 2 0 0 0 0-4m-9 1a1 1 0 0 1 .117 1.993L9 15H7a1 1 0 0 1-.117-1.993L7 13zm4-4a1 1 0 1 1 0 2H7a1 1 0 1 1 0-2z"/></g></svg>
+          </span>
+          <span>Certifications</span>
+        </h2>
+        <div class="cert-list" role="list">
+          {certificationItems.map((item) => (
+            <div class="cert-row" role="listitem">
+              <div class="badge badge--pill">
+                <span>{item.label}</span>
+              </div>
+              <span class="cert-label">{item.name}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+    </aside>
+  </section>
+</div>
+
+<style>
+  .home-scale {
+    display: flex;
+    justify-content: center;
+    transform: scale(0.9);
+    transform-origin: top center;
+    padding-top: 0.5rem;
+  }
+
+  .home {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 2rem;
+    padding: 4rem 2rem 5rem;
+    width: 85%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .overview {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .hero-image {
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    min-height: clamp(200px, 35vw, 280px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(2px);
+    box-shadow: 0 25px 45px rgba(15, 23, 42, 0.35);
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .summary-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.9rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(15, 23, 42, 0.2);
+    backdrop-filter: blur(14px);
+    color: var(--color-text-inverse);
+    box-shadow: 0 25px 55px rgba(15, 23, 42, 0.38);
+  }
+
+  .summary-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding-bottom: 1rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .summary-overline {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-inverse-soft);
+  }
+
+  .summary-title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  .summary-text {
+    margin: 0;
+    color: var(--color-text-inverse-soft);
+    line-height: 1.6;
+  }
+
+  .summary-section {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .summary-label {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-inverse);
+    letter-spacing: 0.02em;
+  }
+
+  .resume-link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.6rem 1.5rem;
+    border-radius: 999px;
+    background: transparent;
+    border: 1px solid rgba(125, 245, 245, 0.6);
+    color: var(--color-text-inverse);
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+
+  .resume-link:hover,
+  .resume-link:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--color-accent);
+    box-shadow: 0 12px 30px rgba(72, 252, 252, 0.28);
+  }
+
+  .context-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .context-card {
+    padding: 1.6rem;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(15, 23, 42, 0.18);
+    backdrop-filter: blur(12px);
+    color: var(--color-text-inverse);
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.32);
+  }
+
+  .context-title {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .context-text {
+    margin: 0;
+    color: var(--color-text-inverse-soft);
+    line-height: 1.6;
+  }
+
+  .context-list {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.5rem;
+    color: var(--color-text-inverse-soft);
+  }
+
+  .context-label {
+    font-weight: 600;
+    color: var(--color-text-inverse);
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .card {
+    border-radius: 20px;
+    padding: 1.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(15, 23, 42, 0.22);
+    backdrop-filter: blur(16px);
+    color: var(--color-text-inverse);
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.32);
+  }
+
+  .card-title {
+    margin: 0 0 1.25rem 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    text-align: center;
+  }
+
+  .card-title-icon svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .icon-grid {
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .icon-grid--six {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 14px;
+    transition: transform 180ms ease, filter 200ms ease;
+  }
+
+  .icon-graphic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 200ms ease, filter 200ms ease;
+    filter: drop-shadow(0 0 0 rgba(125, 245, 245, 0));
+  }
+
+  .icon:hover .icon-graphic,
+  .icon:focus-visible .icon-graphic {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 14px rgba(125, 245, 245, 0.7));
+  }
+
+  .icon:hover,
+  .icon:focus-visible {
+    transform: translateY(-2px);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .cert-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cert-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1.05rem;
+    border-radius: 16px;
+    background: rgba(8, 145, 178, 0.12);
+    border: 1px solid rgba(125, 245, 245, 0.18);
+    transition: border-color 180ms ease;
+  }
+
+  .cert-row:hover,
+  .cert-row:focus-within {
+    border-color: rgba(125, 245, 245, 0.4);
+  }
+
+  .badge {
+    border-radius: 999px;
+    padding: 0.4rem 1.05rem;
+    background: rgba(8, 145, 178, 0.2);
+    border: 1px solid rgba(125, 245, 245, 0.25);
+    color: var(--color-text-inverse);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cert-label {
+    font-size: 0.95rem;
+    color: var(--color-text-inverse-soft);
+    letter-spacing: 0.01em;
+  }
+
+  @media (max-width: 1100px) {
+    .home-scale {
+      transform: none;
+    }
+
+    .home {
+      grid-template-columns: 1fr;
+      width: calc(100% - 3rem);
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .home-scale {
+      transform: none;
+    }
+
+    .home {
+      padding: 3rem 1.25rem 4rem;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .icon-grid--six {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
