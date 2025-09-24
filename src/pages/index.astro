@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import Background from '../components/Background.astro';
 import Home from '../components/Home.astro';
+import './index.css';
 ---
 
 <Layout>
@@ -16,27 +17,3 @@ import Home from '../components/Home.astro';
     <Footer />
   </div>
 </Layout>
-
-<style>
-  .page-with-background {
-    position: relative;
-    min-height: 100vh;
-    isolation: isolate;
-    background-color: transparent;
-  }
-
-  .page-with-background > :not(.page-with-background__layer) {
-    position: relative;
-    z-index: 1;
-  }
-
-  .page-content {
-    padding-top: calc(var(--navbar-height) + 1.5rem);
-  }
-
-  @media (max-width: 720px) {
-    .page-content {
-      padding-top: calc(var(--navbar-height) + 1rem);
-    }
-  }
-</style>

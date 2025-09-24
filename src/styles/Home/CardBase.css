@@ -1,0 +1,31 @@
+.home-card {
+  border-radius: 20px;
+  padding: 1.6rem;
+  border: 1px solid var(--surface-card-border);
+  background: var(--surface-card);
+  color: var(--color-text-inverse);
+  box-shadow: 0 20px 50px var(--shadow-soft);
+}
+
+.home-card__title {
+  margin: 0 0 1.25rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--color-text-inverse);
+}
+
+.home-card__title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+}
+
+.home-card__title-icon svg {
+  width: 26px;
+  height: 26px;
+}

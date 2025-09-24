@@ -1,4 +1,6 @@
 ---
+import '../../styles/Home/SummaryCard.css';
+
 interface Props {
   resumeHref: string;
 }
@@ -39,5 +41,6 @@ const { resumeHref } = Astro.props;
     <p class="summary-text">MEMS, quantum computing, cryptography, bioelectronic systems</p>
   </section>
 
-  <a class="resume-link" href={resumeHref} download>Resume Download</a>
+  <a class="summary-card__resume" href={resumeHref} download>Resume Download</a>
 </article>
+

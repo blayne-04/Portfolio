@@ -1,5 +1,5 @@
 const initCertificationModal = () => {
-  const modal = document.getElementById(''certModal'');
+  const modal = document.getElementById('certModal');
   if (!modal) {
     return;
   }

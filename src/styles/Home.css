@@ -1,0 +1,84 @@
+.home-scale {
+  display: flex;
+  justify-content: center;
+  transform: scale(0.9);
+  transform-origin: top center;
+  padding-top: 0.5rem;
+}
+
+.home {
+  --surface-overlay: color-mix(in srgb, var(--color-surface) 22%, transparent);
+  --surface-card: color-mix(in srgb, var(--color-surface-alt) 32%, transparent);
+  --surface-card-border: color-mix(in srgb, var(--color-text-inverse) 18%, transparent);
+  --shadow-soft: color-mix(in srgb, var(--color-surface) 28%, transparent);
+  --shadow-strong: color-mix(in srgb, var(--color-surface) 38%, transparent);
+  --accent-soft: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  --accent-medium: color-mix(in srgb, var(--color-accent) 24%, transparent);
+  --accent-strong: color-mix(in srgb, var(--color-accent) 36%, transparent);
+  --accent-highlight: color-mix(in srgb, var(--color-accent) 52%, transparent);
+  --modal-backdrop: color-mix(in srgb, var(--color-surface) 68%, transparent);
+  --modal-surface: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 2rem;
+  padding: 4rem 2rem 5rem;
+  width: 85%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.overview {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.hero-image {
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: clamp(200px, 35vw, 280px);
+  border: 1px solid var(--surface-card-border);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 25px 45px var(--shadow-soft);
+}
+
+.hero-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+@media (max-width: 1100px) {
+  .home-scale {
+    transform: none;
+  }
+
+  .home {
+    grid-template-columns: 1fr;
+    width: calc(100% - 3rem);
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .home {
+    padding: 3rem 1.25rem 4rem;
+    width: 100%;
+  }
+
+  .overview {
+    gap: 1.5rem;
+  }
+
+  .sidebar {
+    gap: 1.25rem;
+  }
+}

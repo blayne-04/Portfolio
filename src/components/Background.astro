@@ -1,5 +1,6 @@
 ---
 import bannerImage from '../../public/banner.png';
+import '../styles/Background.css';
 
 const { class: className = '' } = Astro.props;
 ---
@@ -39,56 +40,110 @@ const { class: className = '' } = Astro.props;
   @scroll.window="updateFromScroll()"
   @resize.window="computeShift()"
 >
-  <div class="background__inner" x-ref="container">
+  <div class="background__inner" data-background-container>
     <img
-      x-ref="image"
+      data-background-image
       src={bannerImage.src}
       width={bannerImage.width}
       height={bannerImage.height}
       alt="Mountain skyline"
       class="background__image"
-      x-bind:style="parallaxStyle()"
-      @load="computeShift()"
     />
     <div class="background__overlay"></div>
   </div>
 </section>
 
-<style>
-  .background {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
-  }
+<script type="module">
+  const initBackgroundParallax = () => {
+    const sections = Array.from(document.querySelectorAll('[data-background]'));
+    if (!sections.length) {
+      return;
+    }
 
-  .background__inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 100vh;
-    overflow: hidden;
-    background: #0f1729;
-  }
+    const states = sections
+      .map((section) => {
+        const container = section.querySelector('[data-background-container]');
+        const image = section.querySelector('[data-background-image]');
+        if (!container || !image) {
+          return null;
+        }
+        return { container, image, maxShift: 0 };
+      })
+      .filter(Boolean);
 
-  .background__image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    object-fit: cover;
-    object-position: top;
-    transition: transform 150ms ease-out;
-    will-change: transform;
-  }
+    if (!states.length) {
+      return;
+    }
 
-  .background__overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        180deg,
-        rgba(0, 0, 0, 0.65) 0%,
-        rgba(15, 23, 41, 0.85) 40%,
-        rgba(15, 23, 41, 0.94) 100%
+    let rafId = null;
+
+    const applyTransforms = () => {
+      const scrollY = window.scrollY;
+      states.forEach((state) => {
+        const offset = Math.min(state.maxShift, scrollY * 0.3);
+        state.image.style.transform = 'translateY(-' + offset + 'px)';
+      });
+    };
+
+    const queueUpdate = () => {
+      if (rafId !== null) {
+        return;
+      }
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        applyTransforms();
+      });
+    };
+
+    const computeState = (state) => {
+      const { image, container } = state;
+      const { naturalWidth, naturalHeight } = image;
+      if (!naturalWidth || !naturalHeight) {
+        return false;
+      }
+      const scale = Math.max(
+        container.offsetWidth / naturalWidth,
+        container.offsetHeight / naturalHeight
       );
+      const displayHeight = naturalHeight * scale;
+      image.style.height = ${displayHeight}px;
+      state.maxShift = Math.max(0, displayHeight - container.offsetHeight);
+      return true;
+    };
+
+    const recomputeAll = () => {
+      states.forEach((state) => {
+        state.image.style.height = '';
+        computeState(state);
+      });
+      queueUpdate();
+    };
+
+    window.addEventListener('scroll', queueUpdate, { passive: true });
+    window.addEventListener('resize', recomputeAll);
+
+    states.forEach((state) => {
+      const handleLoad = () => {
+        if (computeState(state)) {
+          queueUpdate();
+        }
+      };
+
+      if (state.image.complete) {
+        handleLoad();
+      } else {
+        state.image.addEventListener('load', handleLoad, { once: true });
+      }
+    });
+
+    queueUpdate();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBackgroundParallax, { once: true });
+  } else {
+    initBackgroundParallax();
   }
-</style>
+</script>
+
+
