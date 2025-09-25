@@ -239,7 +239,7 @@
 
 .modal-progress-bar {
   flex: 1;
-  max-width: 300px;
+  max-width: 120px;
 }
 
 .modal-progress-bar svg {

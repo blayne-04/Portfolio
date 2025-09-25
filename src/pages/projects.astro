@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import Background from '../components/Background.astro';
+import Projects from '../components/Projects.astro';
 import './_index.css';
 ---
 
@@ -11,25 +12,31 @@ import './_index.css';
     <Background class="page-with-background__layer" />
     <Navbar />
     <main class="page-content">
-      <h1 class="coming-soon-text">COMING SOON</h1>
+      <Projects />
     </main>
     <Footer />
   </div>
 </Layout>
 
 <style>
-  .coming-soon-text {
-    font-size: clamp(3rem, 12vw, 8rem);
-    font-weight: bold;
-    color: #7df5f5;
-    text-align: center;
-    margin: 2rem 0;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  .projects-page-content {
+    min-height: calc(100vh - 140px); /* Account for navbar and footer */
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-    min-height: 60vh;
     position: relative;
     z-index: 10;
+    padding: 0;
   }
+
+  /* Ensure projects component fills the content area */
+  .projects-page-content :global(.projects) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+
 </style>
