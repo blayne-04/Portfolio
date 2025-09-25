@@ -3,7 +3,6 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import Background from '../components/Background.astro';
-import Home from '../components/Home.astro';
 import './_index.css';
 ---
 
@@ -12,8 +11,25 @@ import './_index.css';
     <Background class="page-with-background__layer" />
     <Navbar />
     <main class="page-content">
-      <Home />
+      <h1 class="coming-soon-text">COMING SOON</h1>
     </main>
     <Footer />
   </div>
 </Layout>
+
+<style>
+  .coming-soon-text {
+    font-size: clamp(3rem, 12vw, 8rem);
+    font-weight: bold;
+    color: #7df5f5;
+    text-align: center;
+    margin: 2rem 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    position: relative;
+    z-index: 10;
+  }
+</style>

@@ -3,16 +3,16 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import Background from '../components/Background.astro';
-import Home from '../components/Home.astro';
+import About from '../components/About.astro';
 import './_index.css';
 ---
 
 <Layout>
-  <div class="page-with-background">
+  <div class="page-with-background" x-data="backgroundParallax()">
     <Background class="page-with-background__layer" />
     <Navbar />
     <main class="page-content">
-      <Home />
+      <About />
     </main>
     <Footer />
   </div>

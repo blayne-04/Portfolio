@@ -1,146 +1,148 @@
 ---
-import bannerImage from '../../public/banner.png';
 import '../styles/Background.css';
 
 const { class: className = '' } = Astro.props;
 ---
+
 <section
   aria-hidden="true"
   class={`background ${className}`.trim()}
-  x-data="{
-    scrollY: 0,
-    maxShift: 0,
-    displayHeight: null,
-    updateFromScroll() {
-      this.scrollY = window.scrollY;
-    },
-    computeShift() {
-      const container = this.$refs.container;
-      const img = this.$refs.image;
-      if (!container || !img) return;
-      const { naturalWidth, naturalHeight } = img;
-      if (!naturalWidth || !naturalHeight) return;
-      const scale = Math.max(
-        container.offsetWidth / naturalWidth,
-        container.offsetHeight / naturalHeight
-      );
-      const displayHeight = naturalHeight * scale;
-      this.displayHeight = displayHeight;
-      this.maxShift = Math.max(0, displayHeight - container.offsetHeight);
-    },
-    parallaxStyle() {
-      const offset = Math.min(this.maxShift, this.scrollY * 0.3);
-      return {
-        transform: `translateY(-${offset}px)`,
-        height: this.displayHeight ? `${this.displayHeight}px` : undefined,
-      };
-    },
-  }"
-  x-init="updateFromScroll(); computeShift()"
-  @scroll.window="updateFromScroll()"
-  @resize.window="computeShift()"
+  data-background
+  style="position: fixed; top: 0; left: 0; width: 100%; height: 120vh; z-index: -10; overflow: hidden; background: url('/banner.png') center top / cover no-repeat;"
 >
-  <div class="background__inner" data-background-container>
-    <img
-      data-background-image
-      src={bannerImage.src}
-      width={bannerImage.width}
-      height={bannerImage.height}
-      alt="Mountain skyline"
-      class="background__image"
-    />
-    <div class="background__overlay"></div>
-  </div>
+  <div class="background__overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.7) 100%); z-index: 1;"></div>
 </section>
 
-<script type="module">
-  const initBackgroundParallax = () => {
-    const sections = Array.from(document.querySelectorAll('[data-background]'));
-    if (!sections.length) {
-      return;
+<script>
+  function initBackgroundParallax() {
+    const backgroundElement = document.querySelector('[data-background]') as HTMLElement;
+    
+    if (!backgroundElement) return;
+    
+    // Calculate the maximum parallax offset to prevent running out of image
+    let maxParallaxOffset = 0;
+    
+    function calculateMaxOffset() {
+      const viewportHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const maxScroll = documentHeight - viewportHeight;
+      
+      // Calculate how much extra height we have (120vh - 100vh = 20vh)
+      const extraHeight = viewportHeight * 0.2;
+      
+      // Set max offset to prevent showing background beyond image
+      maxParallaxOffset = extraHeight;
     }
-
-    const states = sections
-      .map((section) => {
-        const container = section.querySelector('[data-background-container]');
-        const image = section.querySelector('[data-background-image]');
-        if (!container || !image) {
-          return null;
-        }
-        return { container, image, maxShift: 0 };
-      })
-      .filter(Boolean);
-
-    if (!states.length) {
-      return;
-    }
-
-    let rafId = null;
-
-    const applyTransforms = () => {
+    
+    function updateParallax() {
       const scrollY = window.scrollY;
-      states.forEach((state) => {
-        const offset = Math.min(state.maxShift, scrollY * 0.3);
-        state.image.style.transform = 'translateY(-' + offset + 'px)';
-      });
-    };
-
-    const queueUpdate = () => {
-      if (rafId !== null) {
-        return;
-      }
-      rafId = requestAnimationFrame(() => {
-        rafId = null;
-        applyTransforms();
-      });
-    };
-
-    const computeState = (state) => {
-      const { image, container } = state;
-      const { naturalWidth, naturalHeight } = image;
-      if (!naturalWidth || !naturalHeight) {
-        return false;
-      }
-      const scale = Math.max(
-        container.offsetWidth / naturalWidth,
-        container.offsetHeight / naturalHeight
-      );
-      const displayHeight = naturalHeight * scale;
-      image.style.height = ${displayHeight}px;
-      state.maxShift = Math.max(0, displayHeight - container.offsetHeight);
-      return true;
-    };
-
-    const recomputeAll = () => {
-      states.forEach((state) => {
-        state.image.style.height = '';
-        computeState(state);
-      });
-      queueUpdate();
-    };
-
-    window.addEventListener('scroll', queueUpdate, { passive: true });
-    window.addEventListener('resize', recomputeAll);
-
-    states.forEach((state) => {
-      const handleLoad = () => {
-        if (computeState(state)) {
-          queueUpdate();
-        }
-      };
-
-      if (state.image.complete) {
-        handleLoad();
-      } else {
-        state.image.addEventListener('load', handleLoad, { once: true });
-      }
+      // Move the background at 70% of scroll speed for subtle parallax effect
+      const parallaxOffset = scrollY * 0.7;
+      
+      // Clamp the offset to prevent running out of image
+      const yPos = -Math.min(parallaxOffset, maxParallaxOffset);
+      
+      backgroundElement.style.backgroundPosition = `center ${yPos}px`;
+    }
+    
+    // Calculate initial max offset
+    calculateMaxOffset();
+    
+    // Initialize
+    updateParallax();
+    
+    // Add scroll listener
+    window.addEventListener('scroll', updateParallax, { passive: true });
+    
+    // Recalculate on resize
+    window.addEventListener('resize', () => {
+      calculateMaxOffset();
+      updateParallax();
     });
-
-    queueUpdate();
-  };
-
+    
+    console.log('Background parallax initialized with max offset:', maxParallaxOffset);
+  }
+  
+  // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initBackgroundParallax, { once: true });
+    document.addEventListener('DOMContentLoaded', initBackgroundParallax);
+  } else {
+    initBackgroundParallax();
+  }
+</script>
+
+<style>
+  /* Override the body background color */
+  :global(body) {
+    background-color: transparent !important;
+  }
+</style>
+
+<script>
+  // Simple parallax function
+  function initBackgroundParallax() {
+    const container = document.querySelector('[data-background-container]') as HTMLElement;
+    const image = document.querySelector('[data-background-image]') as HTMLImageElement;
+    
+    if (!container || !image) return;
+    
+    let maxShift = 0;
+    let displayHeight = 0;
+    
+    function computeShift() {
+      if (!image || !container) return;
+      
+      const { naturalWidth, naturalHeight } = image;
+      if (!naturalWidth || !naturalHeight) return;
+      
+      const containerRect = container.getBoundingClientRect();
+      const scale = Math.max(
+        containerRect.width / naturalWidth,
+        containerRect.height / naturalHeight
+      );
+      
+      displayHeight = naturalHeight * scale;
+      maxShift = Math.max(0, displayHeight - containerRect.height);
+    }
+    
+    function updateParallax() {
+      if (!image) return;
+      
+      const scrollY = window.scrollY;
+      const offset = Math.min(maxShift, scrollY * 0.5);
+      
+      image.style.transform = `translate3d(-50%, -${offset}px, 0)`;
+      if (displayHeight > 0) {
+        image.style.height = `${displayHeight}px`;
+      }
+    }
+    
+    // Initialize
+    computeShift();
+    updateParallax();
+    
+    // Event listeners
+    window.addEventListener('scroll', updateParallax, { passive: true });
+    window.addEventListener('resize', () => {
+      computeShift();
+      updateParallax();
+    });
+    
+    // Handle image load
+    if (image.complete) {
+      computeShift();
+      updateParallax();
+    } else {
+      image.addEventListener('load', () => {
+        computeShift();
+        updateParallax();
+      });
+    }
+  }
+  
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBackgroundParallax);
   } else {
     initBackgroundParallax();
   }

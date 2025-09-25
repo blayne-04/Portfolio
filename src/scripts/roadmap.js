@@ -75,6 +75,8 @@ export function initRoadmap() {
     const y = 80 + index * 168; // 20% more vertical distance
     
     node.style.transform = `translate(${x}px, ${y}px)`;
+``    
+    // Store positions for connector drawing (top-left corner positions as before)
     nodePositions.push({ x, y, width: nodeWidth, height: nodeHeight });
   });
 
@@ -113,6 +115,7 @@ function drawConnectors(svg, positions) {
     
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     
+    // Calculate center points from top-left positions
     const startX = start.x + start.width / 2;
     const startY = start.y + start.height;
     const endX = end.x + end.width / 2;

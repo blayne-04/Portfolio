@@ -2,30 +2,39 @@
   width: 100%;
   max-width: 800px;
   margin: 2rem auto;
-  padding: 2rem 1rem; /* Added padding for border spacing */
-  background: rgba(255, 255, 255, 0.01); /* Light background to match other components */
-  border: 1px solid rgba(255, 255, 255, 0.2`); /* Light border */
-  border-radius: 16px; /* Rounded corners */
+  border-radius: 20px;
+  padding: 1.6rem;
+  border: 1px solid var(--surface-card-border);
+  background: var(--surface-card);
+  color: var(--color-text-inverse);
+  box-shadow: 0 20px 50px var(--shadow-soft);
 }
 
 .roadmap-header {
-  display: flex;
+  margin: 0 0 1.25rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  color: var(--color-text-inverse, #ffffff);
+  gap: 0.65rem;
+  color: var(--color-text-inverse);
 }
 
 .roadmap-header svg {
-  color: var(--color-accent, #7df5f5);
-  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  width: 26px;
+  height: 26px;
 }
 
 .roadmap-header h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
   margin: 0;
-  color: var(--color-text-inverse, #ffffff);
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
 }
 
 .roadmap-scroll {
@@ -33,9 +42,9 @@
   height: 600px;
   overflow-y: auto;
   overflow-x: hidden;
-  border-radius: 12px; /* Slightly smaller radius for inner content */
+  border-radius: 0;
   padding: 2rem;
-  background: rgba(0, 0, 0, 0.2); /* Subtle inner background */
+  background: transparent;
 }
 
 /* Custom scrollbar styling */

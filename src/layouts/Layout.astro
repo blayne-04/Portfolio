@@ -1,23 +1,23 @@
 ---
 import '../styles/tailwind.css';
 import '../styles/global.css';
-import alpineScript from 'alpinejs/dist/cdn.min.js?url';
 ---
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/icon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Blayne Fuller</title>
+		<meta name="description" content="Professional Portfolio" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>Portfolio</title>
+		<!-- Alpine.js -->
+		<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 	</head>
 	<body>
 		<div class="page-shell">
 			<slot />
 		</div>
-		<script defer src={alpineScript}></script>
 	</body>
 </html>
 
-	
+
