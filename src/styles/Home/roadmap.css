@@ -68,7 +68,6 @@
   opacity: 0.8;
 }
 
-/* Firefox scrollbar */
 .roadmap-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--color-accent, #7df5f5) rgba(255, 255, 255, 0.05);
