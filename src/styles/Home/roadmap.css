@@ -1,0 +1,319 @@
+.roadmap {
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem 1rem; /* Added padding for border spacing */
+  background: rgba(255, 255, 255, 0.01); /* Light background to match other components */
+  border: 1px solid rgba(255, 255, 255, 0.2`); /* Light border */
+  border-radius: 16px; /* Rounded corners */
+}
+
+.roadmap-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-inverse, #ffffff);
+}
+
+.roadmap-header svg {
+  color: var(--color-accent, #7df5f5);
+  flex-shrink: 0;
+}
+
+.roadmap-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text-inverse, #ffffff);
+}
+
+.roadmap-scroll {
+  width: 100%;
+  height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 12px; /* Slightly smaller radius for inner content */
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.2); /* Subtle inner background */
+}
+
+/* Custom scrollbar styling */
+.roadmap-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.roadmap-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.roadmap-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-accent, #7df5f5);
+  border-radius: 4px;
+  opacity: 0.6;
+}
+
+.roadmap-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-strong, #48fcfc);
+  opacity: 0.8;
+}
+
+/* Firefox scrollbar */
+.roadmap-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent, #7df5f5) rgba(255, 255, 255, 0.05);
+}
+
+.roadmap-plane {
+  position: relative;
+  min-height: 900px;
+  width: 100%;
+}
+
+.roadmap-connections {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.roadmap-connector {
+  fill: none;
+  stroke: var(--color-accent, #7df5f5);
+  stroke-width: 4;
+  stroke-linecap: round;
+  opacity: 0.7;
+  transition: stroke 0.3s ease, opacity 0.3s ease;
+}
+
+.roadmap-node {
+  position: absolute;
+  padding: 1.5rem;
+  background: var(--color-surface, #18181b);
+  border: 2px solid var(--color-accent, #7df5f5);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  min-width: 140px;
+  min-height: 120px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.roadmap-node svg {
+  color: var(--color-accent, #7df5f5);
+  flex-shrink: 0;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.roadmap-node span {
+  color: var(--color-text-inverse, #ffffff);
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.roadmap-node:hover,
+.roadmap-node.active {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--color-accent-strong, #48fcfc);
+  box-shadow: 0 10px 40px rgba(125, 245, 245, 0.3);
+}
+
+.roadmap-node:hover svg,
+.roadmap-node.active svg {
+  color: var(--color-accent-strong, #48fcfc);
+  transform: scale(1.1);
+}
+
+/* Modal Styles - Snappier animations */
+.roadmap-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  backdrop-filter: blur(10px);
+}
+
+.roadmap-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.roadmap-modal-content {
+  background: var(--color-surface, #18181b);
+  border: 2px solid var(--color-accent, #7df5f5);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(0.95);
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.roadmap-modal.active .roadmap-modal-content {
+  transform: scale(1);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header svg {
+  color: var(--color-accent, #7df5f5);
+  flex-shrink: 0;
+}
+
+.modal-header h3 {
+  color: var(--color-text-inverse, #ffffff);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modal-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modal-row label {
+  color: var(--color-accent, #7df5f5);
+  font-weight: 600;
+  min-width: 80px;
+}
+
+.modal-row span {
+  color: var(--color-text-inverse, #ffffff);
+  font-weight: 500;
+}
+
+/* Progress bar container */
+.modal-progress-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.modal-progress-bar {
+  flex: 1;
+  max-width: 300px;
+}
+
+.modal-progress-bar svg {
+  width: 100%;
+  height: auto;
+  color: var(--color-accent, #7df5f5);
+}
+
+.modal-progress-bar svg path {
+  fill: currentColor;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--color-text-inverse, #ffffff);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 640px) {
+  .roadmap {
+    padding: 1.5rem 0.5rem; /* Adjusted padding for mobile */
+    margin: 1.5rem auto;
+  }
+  
+  .roadmap-header h2 {
+    font-size: 1.25rem;
+  }
+  
+  .roadmap-scroll {
+    padding: 1.5rem;
+    height: 550px;
+  }
+  
+  .roadmap-plane {
+    min-height: 800px;
+  }
+  
+  .roadmap-node {
+    padding: 1rem;
+    min-width: 120px;
+    min-height: 100px;
+  }
+  
+  .roadmap-node span {
+    font-size: 0.825rem;
+  }
+
+  .roadmap-modal-content {
+    padding: 1.5rem;
+    margin: 1rem;
+    max-width: 95%;
+  }
+
+  .modal-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .modal-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .modal-progress-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .modal-progress-bar {
+    max-width: 200px;
+  }
+}

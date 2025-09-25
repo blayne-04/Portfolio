@@ -7,6 +7,7 @@ import SummaryCard from './home/SummaryCard.astro';
 import ContextSection from './home/ContextSection.astro';
 import ToolsCard from './home/ToolsCard.astro';
 import CertificationsCard from './home/CertificationsCard.astro';
+import Roadmap from './home/Roadmap.astro';
 
 import certModalScript from '../scripts/certModal.js?url';
 ---
@@ -20,11 +21,13 @@ import certModalScript from '../scripts/certModal.js?url';
       <SummaryCard resumeHref={resumePdf} />
 
       <ContextSection />
+ 
     </div>
 
     <aside class="sidebar">
       <ToolsCard items={toolItems} />
       <CertificationsCard items={certificationItems} />
+      <Roadmap />
     </aside>
   </section>
 </div>
